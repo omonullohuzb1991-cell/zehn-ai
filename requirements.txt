@@ -1,0 +1,7 @@
+aiogram>=3.22
+asyncpg
+python-dotenv
+google-genai
+python-pptx
+aiohttp
+Pillow

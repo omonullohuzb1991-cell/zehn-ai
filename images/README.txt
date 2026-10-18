@@ -1,0 +1,3 @@
+Ixtiyoriy: tibbiy rasmlar omborini shu yerga tashlang.
+Fayl nomi kalit so'z bo'lsin: heart.jpg, skeleton.png, cell.jpg ...
+Slayd sarlavhasi yoki rasm so'rovida shu so'z uchrasa, rasm avtomatik qo'yiladi.

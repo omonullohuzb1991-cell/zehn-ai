@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Zehn Games</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--bg:var(--tg-theme-bg-color,#fff);--fg:var(--tg-theme-text-color,#1f2933);--hint:var(--tg-theme-hint-color,#7b8794);
+--btn:var(--tg-theme-button-color,#2e7bd6);--btnt:var(--tg-theme-button-text-color,#fff);--card:var(--tg-theme-secondary-bg-color,#eef2f7)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,sans-serif}
+#app{max-width:520px;margin:0 auto;padding:16px;min-height:100vh}
+h2{margin:6px 0 14px;text-align:center}.muted{color:var(--hint);text-align:center;margin:6px 0}
+button{font:inherit;border:0;border-radius:12px;padding:14px;background:var(--btn);color:var(--btnt);width:100%;margin:6px 0;cursor:pointer}
+button.ghost{background:var(--card);color:var(--fg)}button:disabled{opacity:.9}
+.card{background:var(--card);border-radius:18px;padding:36px 16px;text-align:center;font-size:30px;min-height:200px;display:flex;align-items:center;justify-content:center;margin:12px 0;cursor:pointer;word-break:break-word}
+.card.back{background:var(--btn);color:var(--btnt)}.row{display:flex;gap:8px}.row button{flex:1}
+.cols{display:flex;gap:10px}.col{flex:1}.col button{background:var(--card);color:var(--fg);min-height:56px;padding:8px;font-size:15px}
+.col button.sel{outline:3px solid var(--btn)}.ok{background:#2fb86b!important;color:#fff!important}.bad{background:#e5484d!important;color:#fff!important}
+.q{font-size:28px;text-align:center;margin:20px 0}.opt{background:var(--card);color:var(--fg);text-align:left}
+</style></head><body><div id="app"></div>
+<script>
+const tg=window.Telegram&&Telegram.WebApp;if(tg){tg.ready();tg.expand();}
+const P=new URLSearchParams(location.search),app=document.getElementById("app");
+let words=[],lang="",title="",startMode=P.get("mode")||"all";
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const clear=()=>{app.innerHTML=""};
+const haptic=t=>{try{tg.HapticFeedback.notificationOccurred(t)}catch(e){}};
+function speak(t){if(!window.speechSynthesis||!lang)return;const u=new SpeechSynthesisUtterance(t);u.lang=lang==="ru"?"ru-RU":"en-US";speechSynthesis.cancel();speechSynthesis.speak(u)}
+function btn(text,fn,cls){const b=el("button",cls||"",text);b.onclick=fn;return b}
+function menu(){clear();app.append(el("h2",0,title));
+ app.append(btn("🃏 Kartochkalar",()=>flash()),btn("🧩 Juftlikni top",match),btn("❓ Viktorina",quiz));}
+function back(){return startMode==="all"?btn("⬅️ Menyu",menu,"ghost"):btn("🔁 Qayta o'ynash",()=>run(startMode),"ghost")}
+function end(text,extra){clear();app.append(el("h2",0,"🏁 Tugadi"),el("div","card",text));if(extra)app.append(extra);app.append(back())}
+function flash(queue){queue=queue||shuffle(words);let i=0,known=0,again=[];
+ (function show(){clear();if(i>=queue.length){return end(`Bilganlaringiz: ${known} / ${queue.length}`,
+   again.length?btn("🔁 Bilmaganlarni takrorlash",()=>flash(again)):null)}
+  const w=queue[i];app.append(el("div","muted",`${i+1} / ${queue.length}`));
+  let f=false;const c=el("div","card",w.w);
+  c.onclick=()=>{f=!f;c.textContent=f?w.t:w.w;c.classList.toggle("back",f);if(!f||lang==="")speak(w.w)};
+  app.append(c,el("div","muted","Kartani bosing — tarjimani ko'rasiz"));
+  const r=el("div","row");r.append(btn("🔊",()=>speak(w.w),"ghost"),
+   btn("🔁 Yana",()=>{again.push(w);i++;show()},"ghost"),btn("✅ Bilaman",()=>{known++;i++;show()}));app.append(r)})()}
+function match(){const set=shuffle(words).slice(0,6);
+ const L=shuffle(set.map((w,i)=>({id:i,t:w.w}))),R=shuffle(set.map((w,i)=>({id:i,t:w.t})));
+ let sl=null,sr=null,done=0,moves=0;const t0=Date.now();clear();
+ app.append(el("h2",0,"🧩 Juftlarni toping"));const g=el("div","cols"),cl=el("div","col"),cr=el("div","col");g.append(cl,cr);app.append(g);
+ const bl=[],br=[];
+ function check(){if(sl===null||sr===null)return;moves++;const a=bl[sl.k],b=br[sr.k];
+  if(sl.id===sr.id){a.className=b.className="ok";a.disabled=b.disabled=true;haptic("success");done++;
+   if(done===set.length)setTimeout(()=>end(`⏱ ${Math.round((Date.now()-t0)/1000)} soniya • ${moves} urinish`),500)}
+  else{a.classList.add("bad");b.classList.add("bad");haptic("error");setTimeout(()=>{a.classList.remove("bad","sel");b.classList.remove("bad","sel")},450)}
+  sl=sr=null}
+ L.forEach((x,k)=>{const b=btn(x.t,()=>{if(sl)bl[sl.k].classList.remove("sel");sl={id:x.id,k};b.classList.add("sel");check()},"");bl.push(b);cl.append(b)});
+ R.forEach((x,k)=>{const b=btn(x.t,()=>{if(sr)br[sr.k].classList.remove("sel");sr={id:x.id,k};b.classList.add("sel");check()},"");br.push(b);cr.append(b)});}
+function quiz(){const n=Math.min(10,words.length),qs=shuffle(words).slice(0,n);let i=0,score=0;
+ (function next(){clear();if(i>=n)return end(`Natija: ${score} / ${n}`);
+  const w=qs[i],rev=Math.random()<.5,ask=rev?w.t:w.w,ans=rev?w.w:w.t;
+  const wrong=[...new Set(shuffle(words.filter(x=>x!==w)).map(x=>rev?x.w:x.t).filter(x=>x!==ans))].slice(0,3);
+  app.append(el("div","muted",`${i+1} / ${n} • to'g'ri: ${score}`),el("div","q",ask));
+  if(!rev)speak(ask);const bs=[];
+  shuffle([ans,...wrong]).forEach(o=>{const b=btn(o,()=>{bs.forEach(x=>x.disabled=true);
+   if(o===ans){b.classList.add("ok");score++;haptic("success")}else{b.classList.add("bad");haptic("error");
+    bs.find(x=>x.textContent===ans).classList.add("ok")}setTimeout(()=>{i++;next()},900)},"opt");bs.push(b);app.append(b)})})()}
+function run(m){({flash:()=>flash(),match,quiz}[m]||menu)()}
+fetch("/api/set/"+encodeURIComponent(P.get("set")||"0")).then(r=>r.ok?r.json():Promise.reject()).then(d=>{
+ words=d.words;lang=d.lang||"";title=d.title;if(words.length<4)throw 0;run(startMode)})
+ .catch(()=>{app.append(el("h2",0,"😕 So'z to'plami topilmadi"))});
+</script></body></html>
