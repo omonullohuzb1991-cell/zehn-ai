@@ -1,7 +1,7 @@
 import asyncio
 import json
 import re
-from config import GEMINI_API_KEY, GEMINI_MODEL
+from config import BOT_NAME, GEMINI_API_KEY, GEMINI_MODEL
 
 try:
     from google import genai
@@ -45,7 +45,7 @@ def parse_json(text):
 
 
 def system_prompt(user):
-    return ("Sen Zehn AI — tibbiyot talabalari uchun o'quv yordamchisisan. "
+    return (f"Sen {BOT_NAME} — tibbiyot talabalari uchun o'quv yordamchisisan. "
             "Aniq, tushunarli va ilmiy asoslangan javob ber. Foydalanuvchi qaysi tilda yozsa, shu tilda javob ber "
             "(asosan o'zbek tilida). Tibbiy atamalarni lotincha qavs ichida keltir. "
             "Bu o'quv yordami, real bemorga tashxis yoki davo tayinlash emasligini kerak bo'lsa eslat. "

@@ -11,9 +11,9 @@ from pptx.enum.shapes import MSO_SHAPE
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.util import Inches, Pt
 import db
-from config import TEMPLATE_DIR, UNSPLASH_KEY
+from config import BOT_NAME, TEMPLATE_DIR, UNSPLASH_KEY
 
-UA = {"User-Agent": "ZehnAIBot/1.0 (educational student bot)"}
+UA = {"User-Agent": "FalakAIBot/1.0 (educational student bot)"}
 WHITE = (0xFF, 0xFF, 0xFF)
 THEMES = {
     "🔵 Tibbiyot": dict(main=(0x0B, 0x3C, 0x7D), accent=(0x2E, 0x9B, 0xD6), light=(0xE8, 0xF1, 0xFB), text=(0x22, 0x2B, 0x38)),
@@ -169,7 +169,7 @@ def _builtin(prs, data, author, images, th):
           anchor=MSO_ANCHOR.BOTTOM)
     _rect(s, Inches(1.25), Inches(4.4), Inches(2.6), Inches(0.09), acc)
     _text(s, Inches(1.2), Inches(4.7), W - Inches(2.4), Inches(1.4), author, 20, light)
-    _text(s, Inches(1.2), H - Inches(0.9), Inches(4), Inches(0.4), "Zehn AI", 14, acc, True)
+    _text(s, Inches(1.2), H - Inches(0.9), Inches(4), Inches(0.4), BOT_NAME, 14, acc, True)
     total = len(data["slides"])
     for i, sd in enumerate(data["slides"]):
         s = prs.slides.add_slide(blank)
@@ -199,7 +199,7 @@ def _builtin(prs, data, author, images, th):
         if img:
             _fit_picture(s, img[0], cx + cw - Inches(5.1), cy + Inches(0.3), Inches(4.7), ch - Inches(0.6))
             s.notes_slide.notes_text_frame.text = f"Rasm manbasi: {img[1]}"
-        _text(s, Inches(0.6), H - Inches(0.65), Inches(4), Inches(0.4), "Zehn AI", 12, acc, True)
+        _text(s, Inches(0.6), H - Inches(0.65), Inches(4), Inches(0.4), BOT_NAME, 12, acc, True)
         _text(s, W - Inches(3.2), H - Inches(0.65), Inches(2.7), Inches(0.4), f"{i + 1} / {total}", 12,
               (0x88, 0x92, 0xA0), align=PP_ALIGN.RIGHT)
 

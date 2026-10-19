@@ -11,7 +11,7 @@ from aiogram.types import BufferedInputFile, ErrorEvent
 from aiohttp import web
 import db
 from common import esc
-from config import BOT_TOKEN, ADMIN_IDS, PORT, PUBLIC_URL, WEBAPP_DIR
+from config import BOT_NAME, BOT_TOKEN, ADMIN_IDS, PORT, PUBLIC_URL, WEBAPP_DIR
 from handlers import start, menu, admin, admin2, browse, ai_chat, slide, account, tests, fallback
 
 
@@ -35,7 +35,7 @@ class RegMiddleware(BaseMiddleware):
 
 async def health_server():
     async def ok(_):
-        return web.Response(text="Zehn AI ishlayapti ✅")
+        return web.Response(text=f"{BOT_NAME} ishlayapti ✅")
     async def app_page(_):
         return web.FileResponse(os.path.join(WEBAPP_DIR, "index.html"), headers={"Cache-Control": "no-cache"})
 

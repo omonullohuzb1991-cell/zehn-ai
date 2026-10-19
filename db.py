@@ -6,7 +6,7 @@ from datetime import datetime, timezone, timedelta
 from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
 
 import asyncpg
-from config import DATABASE_URL
+from config import BOT_NAME, DATABASE_URL
 
 TZ = timezone(timedelta(hours=5))  # O'zbekiston vaqti
 TABLES = ["users", "nodes", "materials", "usage_log", "payments", "tests", "questions", "results",
@@ -144,7 +144,7 @@ async def seed_defaults():
     if await one("SELECT 1 FROM nodes LIMIT 1"):
         return
     roots = ["📚 Darslik", "🌍 Tillar", "Bosh menyu qo'shimcha tugmalari", "ℹ️ Bot haqida"]
-    about = ("<b>Zehn AI</b> — talabalar uchun yordamchi bot.\n\n"
+    about = (f"<b>{BOT_NAME}</b> — talabalar uchun yordamchi bot.\n\n"
              "📚 Darslik • 🖼 Slayd tayyorlash • 📝 Testlar • 🌍 Tillar • 🤖 AI chat")
     async with _pool.acquire() as c, c.transaction():
         for i, t in enumerate(roots, 1):

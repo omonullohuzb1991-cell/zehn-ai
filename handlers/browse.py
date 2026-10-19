@@ -4,7 +4,8 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
 import db
 from common import kb, chunk, esc, btn, ikb, main_kb, is_premium, HOME, BACK, bot_username
-from config import FREE_LIMITS
+from urllib.parse import quote
+from config import BOT_NAME, FREE_LIMITS
 
 router = Router()
 router.message.filter(F.chat.type == "private")
@@ -71,7 +72,7 @@ async def show_about(m: Message):
     me = await bot_username(m.bot)
     link = f"https://t.me/{me}"
     await m.answer("Do'stlaringizga ulashing yoki guruhingizga qo'shing 👇", reply_markup=ikb([
-        [btn("📤 Ulashish", url=f"https://t.me/share/url?url={link}&text=Zehn%20AI%20—%20talabalar%20uchun%20yordamchi%20bot")],
+        [btn("📤 Ulashish", url=f"https://t.me/share/url?url={link}&text={quote(BOT_NAME)}%20—%20talabalar%20uchun%20yordamchi%20bot")],
         [btn("➕ Guruhga qo'shish", url=f"{link}?startgroup=true")]]))
 
 

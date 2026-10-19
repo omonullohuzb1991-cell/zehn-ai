@@ -34,3 +34,6 @@ GROUP_SECONDS = 30  # guruhdagi testda har savolga beriladigan vaqt
 STORAGE_CHANNEL_ID = int(os.getenv("STORAGE_CHANNEL_ID", "0") or 0)  # materiallar saqlanadigan yopiq kanal
 PUBLIC_URL = (os.getenv("PUBLIC_URL") or os.getenv("RENDER_EXTERNAL_URL") or "").rstrip("/")
 WEBAPP_DIR = os.path.join(BASE_DIR, "webapp")
+
+# ---- Bot nomi (hamma matnlarda ishlatiladi). Render/.env da BOT_NAME bilan o'zgartirish mumkin ----
+BOT_NAME = os.getenv("BOT_NAME", "Falak AI")

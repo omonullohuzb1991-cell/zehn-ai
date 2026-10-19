@@ -4,6 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message, ReplyKeyboardRemove
 import db
+from config import BOT_NAME
 from common import kb, main_kb, esc, CANCEL
 from handlers import tests
 
@@ -21,7 +22,7 @@ class Reg(StatesGroup):
 async def welcome(m: Message, payload=None):
     u = await db.get_user(m.from_user.id)
     await m.answer(f"Assalomu alaykum, <b>{esc(u['name'] or m.from_user.first_name)}</b>! 👋\n"
-                   "<b>Zehn AI</b> botiga xush kelibsiz. Kerakli bo'limni tanlang 👇",
+                   f"<b>{BOT_NAME}</b> botiga xush kelibsiz. Kerakli bo'limni tanlang 👇",
                    reply_markup=await main_kb(m.from_user.id))
     if payload and payload.startswith("t_") and payload[2:].isdigit():
         await tests.send_card(m, int(payload[2:]))
@@ -35,7 +36,7 @@ async def start(m: Message, state: FSMContext, command: CommandObject):
         return await welcome(m, command.args)
     await state.update_data(payload=command.args)
     await state.set_state(Reg.name)
-    await m.answer("👋 Salom! <b>Zehn AI</b> — talabalar uchun yordamchi bot.\n"
+    await m.answer(f"👋 Salom! <b>{BOT_NAME}</b> — talabalar uchun yordamchi bot.\n"
                    "Sizga moslashishimiz uchun qisqa ro'yxatdan o'tamiz.\n\n"
                    "1/3 — <b>Ism va familiyangizni</b> yozing:", reply_markup=ReplyKeyboardRemove())
 
